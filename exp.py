@@ -13,10 +13,9 @@ hand-written digits, from 0-9.
 
 # Standard scientific Python imports
 import matplotlib.pyplot as plt
-
-# Import datasets, classifiers and performance metrics
-from sklearn import datasets, metrics, svm
-from sklearn.model_selection import train_test_split
+# Import performance metrics
+from sklearn import metrics
+from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,train_model
 
 ###############################################################################
 # Digits dataset
@@ -32,46 +31,20 @@ from sklearn.model_selection import train_test_split
 # Note: if we were working from image files (e.g., 'png' files), we would load
 # them using :func:`matplotlib.pyplot.imread`.
 
-digits = datasets.load_digits()
 
-_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
-for ax, image, label in zip(axes, digits.images, digits.target):
-    ax.set_axis_off()
-    ax.imshow(image, cmap=plt.cm.gray_r, interpolation="nearest")
-    ax.set_title("Training: %i" % label)
+#1. get data and its labels
+X,y=get_x_and_y()
+#2. split the data in train, test and dev set
+X_train, X_test, y_train, y_test, X_dev, y_dev=split_train_dev_test(X,y,test_size=0.5,dev_size=0.1)
+#3. preproces the data
+X_train=pre_process(X_train)
+X_test=pre_process(X_test)
+X_dev=pre_process(X_dev)
+#4. Train the model
+model=train_model('svm',X_train, y_train,{'gamma':0.001})
+#5. Get the predictions
+predicted = predict_and_eval(model,X_test,y_test)
 
-###############################################################################
-# Classification
-# --------------
-#
-# To apply a classifier on this data, we need to flatten the images, turning
-# each 2-D array of grayscale values from shape ``(8, 8)`` into shape
-# ``(64,)``. Subsequently, the entire dataset will be of shape
-# ``(n_samples, n_features)``, where ``n_samples`` is the number of images and
-# ``n_features`` is the total number of pixels in each image.
-#
-# We can then split the data into train and test subsets and fit a support
-# vector classifier on the train samples. The fitted classifier can
-# subsequently be used to predict the value of the digit for the samples
-# in the test subset.
-
-# flatten the images
-n_samples = len(digits.images)
-data = digits.images.reshape((n_samples, -1))
-
-# Create a classifier: a support vector classifier
-clf = svm.SVC(gamma=0.001)
-
-# Split data into 50% train and 50% test subsets
-X_train, X_test, y_train, y_test = train_test_split(
-    data, digits.target, test_size=0.5, shuffle=False
-)
-
-# Learn the digits on the train subset
-clf.fit(X_train, y_train)
-
-# Predict the value of the digit on the test subset
-predicted = clf.predict(X_test)
 
 ###############################################################################
 # Below we visualize the first 4 test samples and show their predicted
@@ -89,7 +62,7 @@ for ax, image, prediction in zip(axes, X_test, predicted):
 # the main classification metrics.
 
 print(
-    f"Classification report for classifier {clf}:\n"
+    f"Classification report for classifier {model}:\n"
     f"{metrics.classification_report(y_test, predicted)}\n"
 )
 
