@@ -2,6 +2,7 @@
 # Import datasets, classifiers 
 from sklearn import datasets, svm
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 def get_x_and_y():
     digits = datasets.load_digits()
     return digits.images, digits.target
@@ -15,7 +16,7 @@ def pre_process(data):
 def split_train_dev_test(X,y,test_size,dev_size):
     # Split data into 50% train and 50% test subsets
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, shuffle=False
+        X, y, test_size=test_size, random_state=1
     )
     # Split train data into 90% train and 10% dev subsets
     X_train, X_dev, y_train, y_dev = train_test_split(
@@ -23,10 +24,12 @@ def split_train_dev_test(X,y,test_size,dev_size):
     )
     return X_train, X_test, y_train, y_test, X_dev, y_dev
 
-def predict_and_eval(model,X_test,y_test):
+def predict_and_eval(model,X,y):
     # Predict the value of the digit on the test subset
-    predicted = model.predict(X_test)
-    return predicted
+    predicted = model.predict(X)
+    accuracy=accuracy_score(y, predicted)
+    
+    return accuracy
 
 def train_model(classifier,X_train, y_train,model_params):
     # Create a classifier: a support vector classifier
@@ -35,3 +38,22 @@ def train_model(classifier,X_train, y_train,model_params):
     # Learn the digits on the train subset
     model.fit(X_train, y_train)
     return model
+
+def tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination): 
+    best_dev_acc_so_far=-1 
+    for all_param in list_of_all_param_combination:
+        model=train_model('svm',X_train, y_train,all_param)
+
+        #Get the accuracy on dev and test
+        train_accuracy = predict_and_eval(model,X_train, y_train)
+        dev_accuracy = predict_and_eval(model,X_dev, y_dev)
+        # print(dev_accuracy)
+        # print('all_params',all_param)
+        # print('best_dev_acc_so_far',best_dev_acc_so_far)
+        if dev_accuracy>best_dev_acc_so_far:
+            best_dev_acc_so_far=dev_accuracy
+            best_hparams=all_param
+            best_model=model
+            dev_accuracy = predict_and_eval(model,X_dev, y_dev)
+            best_accuracy={'train_accuracy':train_accuracy,'dev_accuracy':dev_accuracy}
+    return best_hparams, best_model, best_accuracy
