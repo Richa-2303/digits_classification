@@ -12,6 +12,7 @@ hand-written digits, from 0-9.
 #import matplotlib.pyplot as plt
 # Import performance metrics
 from sklearn import metrics
+import itertools
 from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,tune_hparams,train_model
 
 
@@ -23,13 +24,11 @@ best_model=None
 best_hparams={}
 test_size_range=[0.1, 0.2, 0.3] 
 dev_size_range=test_size_range
+param_type=['gamma','C']
 gamma_ranges=[0.001,0.01,0.1,1,10,100]
 C_ranges=[0.1,1,2,5,10]
-list_of_all_param_combination=[]
-for gamma in gamma_ranges:
-    for C in C_ranges:
-        list_of_all_param_combination.append({'gamma':gamma,'C':C})
-#print('list_of_all_param_combination',list_of_all_param_combination)
+list_of_all_param_combination = [dict(zip(param_type, values)) for values in itertools.product(gamma_ranges, C_ranges)]
+
 #2. split the data in train, test and dev set
 for test_size in test_size_range:
     for dev_size in dev_size_range:
