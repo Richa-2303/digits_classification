@@ -28,7 +28,8 @@ param_type=['gamma','C']
 gamma_ranges=[0.001,0.01,0.1,1,10,100]
 C_ranges=[0.1,1,2,5,10]
 list_of_all_param_combination = [dict(zip(param_type, values)) for values in itertools.product(gamma_ranges, C_ranges)]
-
+print('The number of total samples in the dataset',X.shape[0])
+print('height of the images in dataset',X[0].shape[0],'width of the images in dataset',X[0].shape[1])
 #2. split the data in train, test and dev set
 for test_size in test_size_range:
     for dev_size in dev_size_range:
