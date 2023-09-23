@@ -41,7 +41,7 @@ for image_size in image_sizes:
     X_resized=[resize(x, (image_size,image_size)) for x in X]
     print('height of the rescaled images in dataset',X_resized[0].shape[0],
           'width of the rescaled images in dataset',X_resized[0].shape[1])
-    X_train, X_test, y_train, y_test, X_dev, y_dev=split_train_dev_test(X,y,test_size=0.2,dev_size=0.1)
+    X_train, X_test, y_train, y_test, X_dev, y_dev=split_train_dev_test(X_resized,y,test_size=0.2,dev_size=0.1)
     #3. preproces the data
     X_train=pre_process(X_train)
     X_test=pre_process(X_test)
