@@ -12,6 +12,7 @@ hand-written digits, from 0-9.
 #import matplotlib.pyplot as plt
 # Import performance metrics
 from sklearn import metrics
+import numpy as np
 import itertools
 from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,tune_hparams,train_model
 from skimage.transform import resize
@@ -38,7 +39,7 @@ print('height of the original images in dataset',X[0].shape[0],'width of the ima
 test_size=0.2
 dev_size=0.1
 for image_size in image_sizes:
-    X_resized=[resize(x, (image_size,image_size)) for x in X]
+    X_resized=np.array([resize(x, (image_size,image_size)) for x in X])
     print('height of the rescaled images in dataset',X_resized[0].shape[0],
           'width of the rescaled images in dataset',X_resized[0].shape[1])
     X_train, X_test, y_train, y_test, X_dev, y_dev=split_train_dev_test(X_resized,y,test_size=0.2,dev_size=0.1)
