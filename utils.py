@@ -17,11 +17,12 @@ def pre_process(data):
 def split_train_dev_test(X,y,test_size,dev_size):
     # Split data into 50% train and 50% test subsets
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=1
+        X, y, test_size=(test_size+dev_size), random_state=1
     )
+    
     # Split train data into 90% train and 10% dev subsets
-    X_train, X_dev, y_train, y_dev = train_test_split(
-        X_train, y_train, test_size=dev_size, shuffle=False
+    X_dev, X_test, y_dev, y_test = train_test_split(
+        X_test, y_test, test_size=1-(dev_size/(test_size+dev_size)), shuffle=False
     )
     return X_train, X_test, y_train, y_test, X_dev, y_dev
 
@@ -53,7 +54,7 @@ def tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination):
             best_dev_acc_so_far=dev_accuracy
             best_hparams=all_param
             best_model=model
-            best_model_path="./models/best_model"+"_".join(["{}:{}".format(k,v) for k,v in best_hparams.items()]+".joblib")
+            best_model_path="./models/best_model"+"_".join(["{}-{}".format(k,v) for k,v in best_hparams.items()])+".joblib"
             dev_accuracy = predict_and_eval(model,X_dev, y_dev)
             best_accuracy={'train_accuracy':train_accuracy,'dev_accuracy':dev_accuracy}
     dump(best_model,best_model_path)

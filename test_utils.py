@@ -30,10 +30,11 @@ def test_data_splitting():
     X,y=create_dummy_data(X,y,size_limit=100)
     test_size=0.1
     dev_size=0.6
+    print(len(X)==100)
     X_train, X_test, y_train, y_test, X_dev, y_dev=split_train_dev_test(X,y,test_size=test_size,dev_size=dev_size)
     assert(len(X_train)==30)
-    assert(len(X_train)==10)
-    assert(len(X_train)==60)
+    assert(len(X_test)==10)
+    assert(len(X_dev)==60)
     
 
 def test_for_hyper_param_combinations_values():
