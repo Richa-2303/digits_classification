@@ -48,7 +48,7 @@ for image_size in image_sizes:
     X_test=pre_process(X_test)
     X_dev=pre_process(X_dev)
     #4. Hyper-parameter tuning
-    best_hparams, best_model, best_accuracy=tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination)
+    best_hparams, best_model_path, best_accuracy=tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination)
     #5. Get the predictions on dev
     test_accuracy = predict_and_eval(best_model,X_test,y_test)
     print('best_hparams: ',best_hparams)
