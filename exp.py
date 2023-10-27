@@ -13,6 +13,7 @@ hand-written digits, from 0-9.
 # Import performance metrics
 from sklearn import metrics
 import numpy as np
+from joblib import load
 import itertools
 from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,tune_hparams,train_model
 from skimage.transform import resize
@@ -50,6 +51,7 @@ for image_size in image_sizes:
     #4. Hyper-parameter tuning
     best_hparams, best_model_path, best_accuracy=tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination)
     #5. Get the predictions on dev
+    best_model=load(best_model_path)
     test_accuracy = predict_and_eval(best_model,X_test,y_test)
     print('best_hparams: ',best_hparams)
     print(f'image_size = {image_size}x{image_size} test_size = {test_size} dev_size = {dev_size} train_size {1-(test_size+dev_size)} train_acc={best_accuracy["train_accuracy"]} dev_acc={best_accuracy["dev_accuracy"]} test_acc=={test_accuracy} ')

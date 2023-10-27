@@ -1,7 +1,7 @@
 
 # Import datasets, classifiers 
 from sklearn import datasets, svm
-from joblib import load,dump
+from joblib import dump
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 def get_x_and_y():
