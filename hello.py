@@ -1,6 +1,36 @@
-from flask import Flask
-
+# from flask import Flask
+from flask import Flask, request, jsonify
+import numpy as np
+from joblib import load
+from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,tune_hparams,train_model,get_list_of_all_param_combination
 app = Flask(__name__)
+
+@app.route('/compare_digits', methods=['POST'])
+def compare_digits():
+    # Get images from the request
+    data = request.get_json()
+
+    # Extract pixel arrays for the images from JSON data
+    image1_pixels = data['image1']
+    image2_pixels = data['image2']
+
+    # Convert pixel arrays to numpy arrays for processing
+    image1_np = np.array(image1_pixels)
+    image2_np = np.array(image2_pixels)
+
+    image1=pre_process(image1_np)
+    image2=pre_process(image2_np)
+
+    best_model=load('\digit_classification\models\best_model_descision_treesmax_depth-10.joblib')
+    predicted1 = best_model.predict(image1)
+    predicted2 = best_model.predict(image2)
+    # Process images using your deep learning model and get the result
+    result ='false'
+    if predicted1==predicted2:result='true'
+
+    # Return the result as JSON
+    return jsonify({"result": result})
+
 
 @app.route("/")
 def hello_world():
