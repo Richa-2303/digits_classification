@@ -22,8 +22,8 @@ def compare_digits():
     image2=pre_process(image2_np)
 
     best_model=load('\digit_classification\models\best_model_descision_treesmax_depth-10.joblib')
-    predicted1 = best_model.predict(image1)
-    predicted2 = best_model.predict(image2)
+    predicted1 = best_model.predict([np.array(image1[:,0])])
+    predicted2 = best_model.predict([np.array(image2[:,0])])
     # Process images using your deep learning model and get the result
     result ='false'
     if predicted1==predicted2:result='true'
@@ -31,6 +31,25 @@ def compare_digits():
     # Return the result as JSON
     return jsonify({"result": result})
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Get images from the request
+    data = request.get_json()
+
+    # Extract pixel arrays for the images from JSON data
+    image1_pixels = data['image1']
+    
+    # Convert pixel arrays to numpy arrays for processing
+    image1_np = np.array(image1_pixels,dtype='float')
+    
+    image1=pre_process(image1_np)
+    
+    best_model=load('models/best_model_descision_treesmax_depth-10.joblib')
+    predicted1 = best_model.predict([np.array(image1[:,0])])
+    # Process images using your deep learning model and get the result
+    result =predicted1
+    # Return the result as JSON
+    return jsonify({"result": result})
 
 @app.route("/")
 def hello_world():
