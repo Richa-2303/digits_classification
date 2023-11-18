@@ -21,7 +21,7 @@ def compare_digits():
     image1=pre_process(image1_np)
     image2=pre_process(image2_np)
 
-    best_model=load('\digit_classification\models\best_model_descision_treesmax_depth-10.joblib')
+    best_model=load('models/best_model_svmgamma-0.001_C-1.joblib')
     predicted1 = best_model.predict([np.array(image1[:,0])])
     predicted2 = best_model.predict([np.array(image2[:,0])])
     # Process images using your deep learning model and get the result
@@ -44,10 +44,10 @@ def predict():
     
     image1=pre_process(image1_np)
     
-    best_model=load('models/best_model_descision_treesmax_depth-10.joblib')
+    best_model=load('models/best_model_svmgamma-0.001_C-1.joblib')
     predicted1 = best_model.predict([np.array(image1[:,0])])
     # Process images using your deep learning model and get the result
-    result =predicted1
+    result =str(predicted1)
     # Return the result as JSON
     return jsonify({"result": result})
 
@@ -56,4 +56,4 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host ='0.0.0.0', port = 5000, debug = True) 
