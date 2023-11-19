@@ -21,6 +21,6 @@ jobs:
       - name: Install dep
         run:  pip3 install --no-cache-dir -r requirements.txt
       - name: Run pytest
-        run: pytest -c "descision_trees"
+        run: pytest -c "descision_trees" -s
       - name: Run Experiment
         run: python -m exp "[svm,descision_trees,svm]" 0.2 0.2 5

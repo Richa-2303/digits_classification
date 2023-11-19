@@ -55,5 +55,9 @@ def predict():
 def hello_world():
     return "<p>Hello, World!</p>"
 
+@app.route("/", methods=["POST"])
+def hello_world_post():    
+    return {"op" : "Hello, World POST " + request.json["suffix"]}
+    
 if __name__ == "__main__":
     app.run(host ='0.0.0.0', port = 5000, debug = True) 
