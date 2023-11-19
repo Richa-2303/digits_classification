@@ -2,6 +2,9 @@ import itertools
 from utils import get_x_and_y,split_train_dev_test,tune_hparams,pre_process
 import os
 import sys
+from hello import app
+import pytest
+from sklearn import datasets
 
 model_type_var=sys.argv[2]
 print("model_type_var",model_type_var)
@@ -56,3 +59,32 @@ def test_for_hyper_param_combinations_values():
         expected_param_combo1={'gamma':0.001,'C':1}
         expected_param_combo2={'gamma':0.01,'C':1}
         assert (expected_param_combo1 in list_of_all_param_combination) and (expected_param_combo2 in list_of_all_param_combination)
+
+def test_get_root():
+    response = app.test_client().get("/")
+    assert response.status_code == 200
+    assert response.get_data() == b"<p>Hello, World!</p>"
+
+def test_post_root():
+    suffix = "post suffix"
+    response = app.test_client().post("/", json={"suffix":suffix})
+    assert response.status_code == 200    
+    assert response.get_json()['op'] == "Hello, World POST "+suffix
+
+def test_post_predict():
+    position=None
+    digits = datasets.load_digits()
+    for num in [0,1,2,3,4,6,7,8,9,5]:
+        for pos, i in enumerate(digits.target):
+            if i==num:
+                position=pos
+                break
+        image1 = digits.images[position]
+        image1 = [str(j) for i in image1 for j in i]
+        response = app.test_client().post("/predict", json={"image1":image1})
+        try:
+            assert response.status_code == 200    
+            assert response.get_json()['result'] == "["+str(num)+"]"
+        except:
+            print("test case failed for digit -"+str(num))
+    
