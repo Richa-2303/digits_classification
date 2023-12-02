@@ -22,12 +22,9 @@ node_modules/
 creds.js
 
 # Private Files
-best_model_descision_treesmax_depth-10.joblib
-best_model_descision_treesmax_depth-20.joblib
-best_model_descision_treesmax_depth-40.joblib
-best_model_svmgamma-0.001_C-2.joblib
-best_model_svmgamma-0.001_C-5.joblib
-
+# best_model_descision_treesmax_depth-10.joblib
+# best_model_descision_treesmax_depth-20.joblib
+# best_model_svmgamma-1*.joblib
 *.json
 *.csv
 *.csv.gz
