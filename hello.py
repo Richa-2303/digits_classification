@@ -1,10 +1,16 @@
 # from flask import Flask
 from flask import Flask, request, jsonify
 import numpy as np
+import os
 from joblib import load
 from utils import get_x_and_y,pre_process,split_train_dev_test,predict_and_eval,tune_hparams,train_model,get_list_of_all_param_combination
 app = Flask(__name__)
 
+def load_model(model_type):
+    models=os.listdir('models/')
+    model_filename=[i for i in models if (model_type in i)and  ('best' in i)]
+    model=load('models/+'str(model_filename))
+    return model
 @app.route('/compare_digits', methods=['POST'])
 def compare_digits():
     # Get images from the request
@@ -31,8 +37,8 @@ def compare_digits():
     # Return the result as JSON
     return jsonify({"result": result})
 
-@app.route('/predict', methods=['POST'])
-def predict():
+@app.route('/predict/<model_type>', methods=['POST'])
+def predict(model_type):
     # Get images from the request
     data = request.get_json()
 
@@ -43,11 +49,11 @@ def predict():
     image1_np = np.array(image1_pixels,dtype='float')
     
     image1=pre_process(image1_np)
-    
-    best_model=load('models/best_model_svmgamma-0.001_C-1.joblib')
+    result={}
+    best_model=load(model_type)
     predicted1 = best_model.predict([np.array(image1[:,0])])
     # Process images using your deep learning model and get the result
-    result =str(predicted1)
+    result[model_type] =str(predicted1)
     # Return the result as JSON
     return jsonify({"result": result})
 
