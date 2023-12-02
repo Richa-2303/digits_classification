@@ -62,6 +62,7 @@ def test_for_hyper_param_combinations_values():
         expected_param_combo2={'gamma':0.01,'C':1}
         assert (expected_param_combo1 in list_of_all_param_combination) and (expected_param_combo2 in list_of_all_param_combination)
 
+
 def test_logistic_regression_model():
     for solver in ['newton-cg', 'lbfgs']:
         loaded_model = load(r'.\models\m22aie217_lr_'+solver+'.joblib')
