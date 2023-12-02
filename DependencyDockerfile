@@ -1,0 +1,5 @@
+FROM python:3.9.17
+EXPOSE 5000
+WORKDIR /digit_classification
+COPY . /digit_classification/
+RUN pip3 install -r /digit_classification/requirements.txt

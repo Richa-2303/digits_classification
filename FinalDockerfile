@@ -1,0 +1,6 @@
+FROM DependencyImage:latest
+RUN pytest -c descision_trees
+RUN python -m exp "[svm,descision_trees,logistic_regression]" 0.2 0.2 1
+# VOLUME /digit_classification/models
+ENV FLASK_APP=hello.py
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]

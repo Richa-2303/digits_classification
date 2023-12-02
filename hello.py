@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 def load_model(model_type):
     models=os.listdir('models/')
-    model_filename=[i for i in models if (model_type in i)and  ('best' in i)]
+    model_filename=[i for i in models if (model_type in i)and  ('best' in i)][0]
     model=load('models/'+str(model_filename))
     return model
 @app.route('/compare_digits', methods=['POST'])
@@ -50,7 +50,7 @@ def predict(model_type):
     
     image1=pre_process(image1_np)
     result={}
-    best_model=load(model_type)
+    best_model=load_model(f'{model_type}')
     predicted1 = best_model.predict([np.array(image1[:,0])])
     # Process images using your deep learning model and get the result
     result[model_type] =str(predicted1)
