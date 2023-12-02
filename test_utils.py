@@ -5,6 +5,8 @@ import sys
 from hello import app
 import pytest
 from sklearn import datasets
+from sklearn.linear_model import LogisticRegression
+from joblib import load
 
 model_type_var=sys.argv[2]
 print("model_type_var",model_type_var)
@@ -60,6 +62,11 @@ def test_for_hyper_param_combinations_values():
         expected_param_combo2={'gamma':0.01,'C':1}
         assert (expected_param_combo1 in list_of_all_param_combination) and (expected_param_combo2 in list_of_all_param_combination)
 
+def test_logistic_regression_model():
+    for solver in ['newton-cg', 'lbfgs']:
+        loaded_model = load(r'.\models\m22aie217_lr_'+solver+'.joblib')
+        assert isinstance(loaded_model, LogisticRegression)
+        assert solver == loaded_model.get_params()['solver']
 def test_get_root():
     response = app.test_client().get("/")
     assert response.status_code == 200

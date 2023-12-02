@@ -92,17 +92,13 @@ def tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination,m
             print(f"Mean Score: ",np.mean(scores))
             print(f"Std Deviation: ",np.std(scores))
             print(f'model_type = {model_type} train_acc={train_accuracy} dev_acc={dev_accuracy} ')
-
+            lr_model_path="./models/m22aie217_lr_"+all_param['solver']+".joblib"
+            dump(model,lr_model_path)
         if dev_accuracy>best_dev_acc_so_far:
             best_dev_acc_so_far=dev_accuracy
             best_hparams=all_param
             best_model=model
-            if model_type=='logistic_regression':
-                
-                best_model_path="./models/m22aie217_lr_"+best_hparams['solver']+".joblib"
-                print('best_model_path',best_model_path)
-            else:
-                best_model_path="./models/best_model_"+model_type+"_".join(["{}-{}".format(k,v) for k,v in best_hparams.items()])+".joblib"
+            best_model_path="./models/best_model_"+model_type+"_".join(["{}-{}".format(k,v) for k,v in best_hparams.items()])+".joblib"
             dev_accuracy = predict_and_eval(model,X_dev, y_dev)
             best_accuracy={'train_accuracy':train_accuracy,'dev_accuracy':dev_accuracy}
     dump(best_model,best_model_path)
