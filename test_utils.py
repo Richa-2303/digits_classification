@@ -65,7 +65,7 @@ def test_for_hyper_param_combinations_values():
 
 def test_logistic_regression_model():
     for solver in ['newton-cg', 'lbfgs']:
-        loaded_model = load(r'.\models\m22aie217_lr_'+solver+'.joblib')
+        loaded_model = load(r'models/m22aie217_lr_'+solver+'.joblib')
         assert isinstance(loaded_model, LogisticRegression)
         assert solver == loaded_model.get_params()['solver']
 def test_get_root():
