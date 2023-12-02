@@ -9,7 +9,7 @@ app = Flask(__name__)
 def load_model(model_type):
     models=os.listdir('models/')
     model_filename=[i for i in models if (model_type in i)and  ('best' in i)]
-    model=load('models/+'str(model_filename))
+    model=load('models/'+str(model_filename))
     return model
 @app.route('/compare_digits', methods=['POST'])
 def compare_digits():
